@@ -15,3 +15,25 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+Route::get('/user', function()
+{
+  $user = new User;
+  $user->username = 'test';
+  $user->email = 'test@test.com';
+  $user->password = 'password';
+  $user->password_confirmation = 'password';
+  var_dump($user->save());
+});
+
+
+Route::get('/post', function()
+{
+    // Create a new Post
+    $post = new Post(array('body' => 'Yada yada yada'));
+    // Grab User 1
+    $user = User::find(1);
+    // Save the Post
+    var_dump($user->posts()->save($post));
+});
+

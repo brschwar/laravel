@@ -2,8 +2,16 @@
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use LaravelBook\Ardent\Ardent;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends Ardent implements UserInterface, RemindableInterface {
+
+    /**
+     * Get rid of the redundant data like confirmation fields.
+     *
+     * @var boolean
+     */
+    public $autoPurgeRedundantAttributes = true;
 
 	/**
 	 * The database table used by the model.
@@ -32,6 +40,19 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
      * @var array
      */
     protected $guarded = array('id', 'password');
+
+
+    /**
+     * Ardent validation rules
+     *
+     * @var array
+     */
+    public static $rules = array(
+      'username' => 'required|between:4,16',
+      'email' => 'required|email',
+      'password' => 'required|alpha_num|min:8|confirmed',
+      'password_confirmation' => 'required|alpha_num|min:8',
+    );
 
 	/**
 	 * Get the unique identifier for the user.
@@ -62,5 +83,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->email;
 	}
+
+    /**
+     * Define the relationship to the Post model.
+     */
+    public function posts()
+    {
+      return $this->hasMany('Post');
+    }
+
+
 
 }
